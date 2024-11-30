@@ -1,0 +1,103 @@
+import pybullet as p
+import pybullet_data
+import time
+import numpy as np
+from controller import Controller
+import matplotlib.pyplot as plt
+
+# Connect to PyBullet
+p.connect(p.GUI)
+p.setAdditionalSearchPath(pybullet_data.getDataPath())
+
+# Load the ground plane
+plane = p.loadURDF("plane.urdf")
+
+# Set environment
+p.setGravity(0, 0, -9.81)
+p.changeDynamics(plane, -1, lateralFriction=1.0)
+timeStep = 1.0 / 500.0
+p.setTimeStep(timeStep)
+
+# Load the robot URDF
+robot = p.loadURDF("two_wheel_robot.urdf", [0, 0, 0.05], useFixedBase=False)
+robot_control = Controller(1.0, 0.2, 0.2, 0.2, 0.0166667, 0.014166667, 0.004166667, 0.00025, 0.05, timeStep)
+
+# Get the joint indices
+num_joints = p.getNumJoints(robot)
+for i in range(num_joints):
+    info = p.getJointInfo(robot, i)
+    print(f"Joint {i}: {info[1].decode('utf-8')}")
+
+for i in range(1,3):
+    p.changeDynamics(robot, i, lateralFriction=1.0)
+    p.setJointMotorControl2(robot, i, p.VELOCITY_CONTROL, force=0)
+    p.resetJointState(robot, i, targetValue=0, targetVelocity=0)
+
+# Control parameters
+left_torque = 0
+right_torque = 0
+
+# Initialize variables for calculating accelerations
+previous_wheel_velocities = np.array([[0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0], [0,0]])
+previous_base_velocity_robot = np.zeros(10)
+previous_yaw_velocity = np.zeros(10)
+previous_pitch_velocity = np.zeros(10)
+
+# Parameter
+linear_speed_slider = p.addUserDebugParameter("Linear Speed (X)", -1, 1, 0)  # Min, Max, Default
+angular_speed_slider = p.addUserDebugParameter("Angular Speed (Yaw)", -1, 1, 0)  # Min, Max, Default
+
+# Simulation loop with feedback
+while True:
+    # Apply torque control
+    p.setJointMotorControl2(robot, 1, p.TORQUE_CONTROL, force=left_torque)
+    p.setJointMotorControl2(robot, 2, p.TORQUE_CONTROL, force=right_torque)
+
+    # Step simulation
+    p.stepSimulation()
+    time.sleep(timeStep)
+
+    # Robot base orientation and Convert linear velocity to robot's local frame
+    base_position, base_orientation = p.getBasePositionAndOrientation(robot)
+    base_linear_velocity, base_angular_velocity = p.getBaseVelocity(robot)
+    rotation_matrix = p.getMatrixFromQuaternion(base_orientation)
+    rotation_matrix = np.array(rotation_matrix).reshape(3, 3)
+    linear_velocity_robot = np.dot(rotation_matrix.T, base_linear_velocity)  # Transform velocity
+    x = base_position[0]
+    y = base_position[1]
+    x_velocity = linear_velocity_robot[0]  # Forward velocity in robot's local frame
+
+    # Get yaw from quaternion
+    _, _, yaw = p.getEulerFromQuaternion(base_orientation)
+    yaw_velocity = base_angular_velocity[2]  # Angular velocity around Z-axis
+
+    # Body tilt around y-axis (pitch)
+    _, pitch, _ = p.getEulerFromQuaternion(base_orientation)
+    pitch_velocity = base_angular_velocity[1]
+
+    # Wheel positions and velocities
+    wheel_feedback = []
+    for i in range(1, 3):  # Assuming joints 1 and 2 are wheels
+        joint_state = p.getJointState(robot, i)
+        q = joint_state[0]  # Position
+        qdot = joint_state[1]  # Velocity
+        wheel_feedback.append((q, qdot))
+
+    # Print feedback
+    print(f"Left_torque: {left_torque:.4f}, Right_torque: {right_torque:.4f}")
+    print(f"Forward Velocity: {x_velocity:.4f} m/s")
+    print(f"Body Tilt: {pitch:.4f}, Body Tilt Velocity: {pitch_velocity:.4f}")
+    print(f"Robot Angle: {yaw:.4f}, Robot Rotation velocity: {yaw_velocity:.4f}")
+    print(f"Left Wheel: Position (q): {wheel_feedback[0][0]:.4f}, Velocity (qdot): {wheel_feedback[0][1]:.4f}")
+    print(f"Right Wheel: Position (q): {wheel_feedback[1][0]:.4f}, Velocity (qdot): {wheel_feedback[1][1]:.4f}")
+    print("------")
+
+    linear_speed = p.readUserDebugParameter(linear_speed_slider)
+    angular_speed = p.readUserDebugParameter(angular_speed_slider)
+
+    ff_torque = robot_control.feedForward(pitch)
+    balance_torque = robot_control.balanceControl(pitch, pitch_velocity)
+    linear_torque = robot_control.linearVControl(linear_speed, wheel_feedback[0][1], wheel_feedback[1][1])
+    turn_torque = robot_control.angularVControl(angular_speed, wheel_feedback[0][1], wheel_feedback[1][1])
+    left_torque = ff_torque + balance_torque + linear_torque + turn_torque
+    right_torque = ff_torque + balance_torque + linear_torque - turn_torque
