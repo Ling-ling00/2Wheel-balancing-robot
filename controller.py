@@ -35,7 +35,6 @@ class Controller:
         v_current = (-left_wheel-right_wheel)*self.r/2
 
         error = v_target - v_current
-        # print(error)
         proportional = kp * error
         self.v_integral += error * self.dt
         integral = ki * self.v_integral
@@ -74,9 +73,9 @@ class Controller:
         J = np.array([[1/self.r, 1/self.r],
                      [-1, -1],
                      [-self.d/(2*self.r), self.d/(2*self.r)]])
-        
-        T = np.array([[Tl], [Tr]])
 
-        qdotdot = np.linalg.inv(M) @ ((J @ T) - b - g)
+        T = np.array([[-Tl], [-Tr]])
+
+        qdotdot = np.linalg.inv(M) @ ((J @ T) - b + g)
 
         return qdotdot

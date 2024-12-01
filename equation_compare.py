@@ -49,8 +49,8 @@ real_velo = [[], [], []]
 current_cal_velo = [0, 0, 0]
 time_stamp = []
 current_time = 0.0
-is_compare = True
 prev_state = 0
+f = [[], [], [], []]
 
 # Simulation loop with feedback
 while True:
@@ -109,7 +109,7 @@ while True:
     pitch_accel = acceleration[1][0]
     yaw_accel = acceleration[2][0]
 
-    if is_compare and current_time < 2.0:
+    if current_time < 2.0:
         calculate_velo[0].append(current_cal_velo[0])
         calculate_velo[1].append(current_cal_velo[1])
         calculate_velo[2].append(current_cal_velo[2])
@@ -118,12 +118,32 @@ while True:
         real_velo[2].append(yaw_velocity)
         time_stamp.append(current_time)
 
+        contact_l = p.getContactPoints(robot, plane, 1, -1)
+        lf1_l = 0
+        lf2_l = 0
+        for point in contact_l:
+            print(f"N: {point[9]}, lf1: {point[10]}, lf2: {point[12]}")
+            lf1_l += point[10]
+            lf2_l += point[12]
+        f[0].append(lf1_l)
+        f[1].append(lf2_l)
+
+        contact_r = p.getContactPoints(robot, plane, 2, -1)
+        lf1_r = 0
+        lf2_r = 0
+        for point in contact_r:
+            print(f"N: {point[9]}, lf1: {point[10]}, lf2: {point[12]}")
+            lf1_r += point[10]
+            lf2_r += point[12]
+        f[2].append(lf1_r)
+        f[3].append(lf2_r)
+
         # current_cal_velo = [x_velocity, pitch_velocity, yaw_velocity]
-        current_cal_velo[0] -= acceleration[0][0] * (timeStep)
-        current_cal_velo[1] -= acceleration[1][0] * (timeStep)
-        current_cal_velo[2] -= acceleration[2][0] * (timeStep)
+        current_cal_velo[0] += acceleration[0][0] * (timeStep)
+        current_cal_velo[1] += acceleration[1][0] * (timeStep)
+        current_cal_velo[2] += acceleration[2][0] * (timeStep)
         current_time += timeStep
-    elif is_compare:
+    else:
         p.disconnect()
         print(real_velo[0][0], calculate_velo[0][0])
         components = ['X Velocity', 'Pitch Velocity', 'Yaw Velocity']
@@ -148,4 +168,18 @@ while True:
 
         plt.tight_layout()  # Adjust spacing between subplots
         plt.show()
-        is_compare = False
+
+        components = ['f1_l', 'f2_l', 'f1_r', 'f2_r']
+        fig, axs = plt.subplots(2, 2, figsize=(12, 10))
+
+        for i in range(4):  # Loop through 3 components
+            # Plot real velocity on the left column
+            axs[i//2, i%2].plot(time_stamp, f[i], label=f"{components[i]}")
+            axs[i//2, i%2].set_xlabel("Time (s)")
+            axs[i//2, i%2].set_ylabel(f"{components[i]}")
+            axs[i//2, i%2].set_title(f"{components[i]}")
+            axs[i//2, i%2].legend()
+            axs[i//2, i%2].grid()
+
+        plt.tight_layout()  # Adjust spacing between subplots
+        plt.show()
