@@ -80,7 +80,7 @@
   <joint name="left_joint" type="continuous">
     <parent link="base_link"/>
     <child link="left_wheel"/>
-    <origin xyz="0 0.1 -0.2" rpy="1.57079632679 0 0"/>
+    <origin xyz="0 0.1 -0.2" rpy="-1.57079632679 0 0"/>
     <axis xyz="0 0 1"/>
   </joint>
 
@@ -88,7 +88,7 @@
   <joint name="right_joint" type="continuous">
     <parent link="base_link"/>
     <child link="right_wheel"/>
-    <origin xyz="0 -0.1 -0.2" rpy="1.57079632679 0 0"/>
+    <origin xyz="0 -0.1 -0.2" rpy="-1.57079632679 0 0"/>
     <axis xyz="0 0 1"/>
   </joint>
 </robot>

@@ -21,20 +21,30 @@ class Controller:
         self.w_integral = 0
 
     def feedForward(self, theta):
-        return self.M_body * self.l * self.g * np.sin(theta)
+        return -self.M_body * self.l * self.g * np.sin(theta)
     
     def balanceControl(variable, theta, thetadot):
-        kp = 2.0
-        kd = 0.2
-        return ((-1*theta*kp)+(-1*thetadot*kd))*1/2
+        # kp = 5.0
+        # kd = 1.765
+        # kp = 50.0
+        # kd = 10.0
+        kp = 120.0
+        kd = 5.85
+        # print(theta, ((-1*theta*kp)+(-1*thetadot*kd))*1/2)
+        return ((-1*-theta*kp)+(-1*-thetadot*kd))*1/2
 
     def linearVControl(self, v_target, left_wheel, right_wheel):
-        kp = 5.0
-        ki = 0.2
-        kd = 0.2
-        v_current = (-left_wheel-right_wheel)*self.r/2
+        # kp = 41.8
+        kp = 50
+        ki = 1.80
+        kd = 3.0
+        # kp = 120
+        # ki = 0.05
+        # kd = 0.5
+        v_current = (left_wheel+right_wheel)*self.r/2
 
         error = v_target - v_current
+        print(error)
         proportional = kp * error
         self.v_integral += error * self.dt
         integral = ki * self.v_integral
@@ -44,10 +54,13 @@ class Controller:
         return output*self.r/2
     
     def angularVControl(self, w_target, left_wheel, right_wheel):
-        kp = 0.25
-        ki = 0
-        kd = 0
-        w_current = (-right_wheel+left_wheel)*self.r/self.d
+        # kp = 40.05
+        # ki = 0.003
+        # kd = 0.000125
+        kp = 0.0
+        ki = 0.0
+        kd = 0.0
+        w_current = (right_wheel-left_wheel)*self.r/self.d
         # print(w_current)
 
         error = w_target - w_current
@@ -73,9 +86,11 @@ class Controller:
         J = np.array([[1/self.r, 1/self.r],
                      [-1, -1],
                      [-self.d/(2*self.r), self.d/(2*self.r)]])
+        
+        T = np.array([[Tl], [Tr]])
 
-        T = np.array([[-Tl], [-Tr]])
-
-        qdotdot = np.linalg.inv(M) @ ((J @ T) - b + g)
+        qdotdot = np.linalg.inv(M) @ ((J @ T) - b - g)
 
         return qdotdot
+    
+
