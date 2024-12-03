@@ -39,7 +39,7 @@ for i in range(num_joints):
     print(f"Joint {i}: {info[1].decode('utf-8')}")
 
 for i in range(1,3):
-    p.changeDynamics(robot, i, lateralFriction=1.0, angularDamping = 5.0)
+    p.changeDynamics(robot, i, lateralFriction=1.0, angularDamping = 5.5)
     p.setJointMotorControl2(robot, i, p.VELOCITY_CONTROL, force=0)
     p.resetJointState(robot, i, targetValue=0, targetVelocity=0)
 

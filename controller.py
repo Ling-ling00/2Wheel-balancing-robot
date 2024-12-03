@@ -26,21 +26,21 @@ class Controller:
     def balanceControl(variable, theta, thetadot):
         # kp = 5.0
         # kd = 1.765
-        # kp = 50.0
-        # kd = 10.0
-        kp = 120.0
-        kd = 5.85
+        kp = 150.0
+        kd = 0.55
+        # kp = 109.05
+        # kd = 24.3
         # print(theta, ((-1*theta*kp)+(-1*thetadot*kd))*1/2)
-        return ((-1*-theta*kp)+(-1*-thetadot*kd))*1/2
+        return -(((-1*theta*kp)+(-1*thetadot*kd)))*1/2
 
     def linearVControl(self, v_target, left_wheel, right_wheel):
-        # kp = 41.8
-        kp = 50
-        ki = 1.80
-        kd = 3.0
+        kp = 488.58
+        # kp = 500
+        # ki = 1.80
+        # kd = 3.0
         # kp = 120
-        # ki = 0.05
-        # kd = 0.5
+        ki = 10.0
+        kd = 100.0
         v_current = (left_wheel+right_wheel)*self.r/2
 
         error = v_target - v_current
