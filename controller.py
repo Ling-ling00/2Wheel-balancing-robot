@@ -20,46 +20,38 @@ class Controller:
         self.w_previous_error = 0
         self.w_integral = 0
 
-    def feedForward(self, theta):
-        return -self.M_body * self.l * self.g * np.sin(theta)
+    def feedForward(self, theta, target):
+        return -self.M_body * self.l * self.g * np.sin(theta-target)
     
-    def balanceControl(variable, theta, thetadot):
-        # kp = 5.0
-        # kd = 1.765
-        kp = 150.0
-        kd = 0.55
-        # kp = 109.05
-        # kd = 24.3
-        # print(theta, ((-1*theta*kp)+(-1*thetadot*kd))*1/2)
-        return -(((-1*theta*kp)+(-1*thetadot*kd)))*1/2
+    def balanceControl(self, theta, thetadot, target):
+        kp = 0.1
+        kd = 0.01
+        theta_target = target
+        thetadot_target = (0-theta_target)/self.dt
+        return -(((theta_target-theta)*kp)+((thetadot_target-thetadot)*kd))*1/2
 
     def linearVControl(self, v_target, left_wheel, right_wheel):
-        kp = 488.58
-        # kp = 500
-        # ki = 1.80
-        # kd = 3.0
-        # kp = 120
-        ki = 10.0
-        kd = 100.0
+        kp = 0.05
+        ki = 0.02
+        kd = 0.01
         v_current = (left_wheel+right_wheel)*self.r/2
 
         error = v_target - v_current
-        print(error)
         proportional = kp * error
         self.v_integral += error * self.dt
         integral = ki * self.v_integral
         derivative = kd * (error - self.v_previous_error) / self.dt
         output = proportional + integral + derivative
         self.v_previous_error = error
-        return output*self.r/2
+        return output
     
     def angularVControl(self, w_target, left_wheel, right_wheel):
-        # kp = 40.05
-        # ki = 0.003
-        # kd = 0.000125
-        kp = 0.0
-        ki = 0.0
-        kd = 0.0
+        kp = 2.0
+        ki = 0.4
+        kd = 0.07
+        # kp = 0
+        # ki = 0
+        # kd = 0
         w_current = (right_wheel-left_wheel)*self.r/self.d
         # print(w_current)
 
@@ -74,23 +66,37 @@ class Controller:
 
         return output*self.r/self.d
     
-    def compare(self, theta, Tl, Tr):
+    def compare(self, theta, Tl, Tr, fl, fr):
         M = np.array([[self.M_body + 2*self.M_wheel + 2*self.J/(self.r*self.r), self.M_body*self.l*np.cos(theta[0]), 0],
                     [self.M_body*self.l*np.cos(theta[0]), self.Iy+self.M_body*self.l*self.l, 0],
                     [0, 0, self.Iz+(self.M_wheel*self.d*self.d/2)+(self.J*self.d*self.d/(2*self.r*self.r))]])
         
         b = np.array([[-self.M_body*self.l*theta[1]*theta[1]*np.sin(theta[0])], [0], [0]])
 
-        g = np.array([[0], [-self.M_body*self.g*self.l*np.sin(theta[0])], [0]])
+        g = np.array([[0], [self.M_body*self.g*self.l*np.sin(theta[0])], [0]])
 
         J = np.array([[1/self.r, 1/self.r],
                      [-1, -1],
                      [-self.d/(2*self.r), self.d/(2*self.r)]])
-        
-        T = np.array([[Tl], [Tr]])
 
-        qdotdot = np.linalg.inv(M) @ ((J @ T) - b - g)
+        if Tl < -fl:
+            Tl_use = Tl+fl
+        elif Tl > fl:
+            Tl_use = Tl-fl
+        else:
+            Tl_use = 0
+
+        if Tr < -fr:
+            Tr_use = Tr+fr
+        elif Tr > fr:
+            Tr_use = Tr-fr
+        else:
+            Tr_use = 0
+
+        T = np.array([[Tl_use], [Tr_use]])
+        print(Tl, Tl_use)
+        print(Tr, Tr_use)
+
+        qdotdot = np.linalg.inv(M) @ ((J @ T) - b + g)
 
         return qdotdot
-    
-
