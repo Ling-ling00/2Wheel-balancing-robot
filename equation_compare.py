@@ -100,21 +100,21 @@ while True:
     # print(f"Right Wheel: Position (q): {wheel_feedback[1][0]:.4f}, Velocity (qdot): {wheel_feedback[1][1]:.4f}")
     # print("------")
 
-    ff_torque = robot_control.feedForward(pitch)
-    balance_torque = robot_control.balanceControl(pitch, pitch_velocity)
-    linear_torque = robot_control.linearVControl(1, wheel_feedback[0][1], wheel_feedback[1][1])
-    turn_torque = robot_control.angularVControl(0, wheel_feedback[0][1], wheel_feedback[1][1])
-    new_left_torque = ff_torque + balance_torque + linear_torque - turn_torque
-    new_right_torque = ff_torque + balance_torque + linear_torque + turn_torque
+    linear_angle = robot_control.linearVControl(1, wheel_feedback[0][1], wheel_feedback[1][1])
+    turn_torque = robot_control.angularVControl(0.5, wheel_feedback[0][1], wheel_feedback[1][1])
+    ff_torque = robot_control.feedForward(pitch, linear_angle)
+    balance_torque = robot_control.balanceControl(pitch, pitch_velocity, linear_angle)
+    new_left_torque = ff_torque + balance_torque - turn_torque
+    new_right_torque = ff_torque + balance_torque + turn_torque
     left_torque = max(min(left_torque + threshold, new_left_torque), left_torque - threshold)
     right_torque = max(min(right_torque + threshold, new_right_torque), right_torque - threshold)
 
     print("ff",ff_torque)
     print("balance", balance_torque)
-    print("linear", linear_torque)
+    print("linear", linear_angle)
     print("angular", turn_torque)
 
-    if current_time < 20.0:
+    if current_time < 30.0:
 
         contact_l = p.getContactPoints(robot, plane, 1, -1)
         lfx_l = 0

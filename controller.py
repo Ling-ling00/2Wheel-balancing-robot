@@ -20,20 +20,18 @@ class Controller:
         self.w_previous_error = 0
         self.w_integral = 0
 
-    def feedForward(self, theta):
-        return -self.M_body * self.l * self.g * np.sin(theta)
+    def feedForward(self, theta, target):
+        return -self.M_body * self.l * self.g * np.sin(theta-target)
     
-    def balanceControl(self, theta, thetadot):
-        kp = 1
-        kd = 0.1
-        # kp = 0.001
-        # kd = 0.001
-        theta_target = 0
+    def balanceControl(self, theta, thetadot, target):
+        kp = 0.1
+        kd = 0.01
+        theta_target = target
         thetadot_target = (0-theta_target)/self.dt
         return -(((theta_target-theta)*kp)+((thetadot_target-thetadot)*kd))*1/2
 
     def linearVControl(self, v_target, left_wheel, right_wheel):
-        kp = 0.005
+        kp = 0.05
         ki = 0.02
         kd = 0.01
         v_current = (left_wheel+right_wheel)*self.r/2
@@ -45,15 +43,15 @@ class Controller:
         derivative = kd * (error - self.v_previous_error) / self.dt
         output = proportional + integral + derivative
         self.v_previous_error = error
-        return output*self.r/2
+        return output
     
     def angularVControl(self, w_target, left_wheel, right_wheel):
-        # kp = 5.0
-        # ki = 1.5
-        # kd = 0.7
-        kp = 0
-        ki = 0
-        kd = 0
+        kp = 2.0
+        ki = 0.4
+        kd = 0.08
+        # kp = 0
+        # ki = 0
+        # kd = 0
         w_current = (right_wheel-left_wheel)*self.r/self.d
         # print(w_current)
 
