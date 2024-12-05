@@ -1,5 +1,5 @@
 # Two-wheels self-balancing robot
-- This project simulates dynamics of a two-wheels self-balancing robot, and including PID controller to maintain balance and reach the target velocity.
+- This project simulates dynamics of a two-wheels self-balancing robot, and including PID controller to maintain balance and reach the target velocity. 
 
 # Table of content
 - [**Installation**](#installation)
