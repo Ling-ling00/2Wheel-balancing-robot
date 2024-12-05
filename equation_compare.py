@@ -13,8 +13,6 @@ p.setAdditionalSearchPath(pybullet_data.getDataPath())
 plane = p.loadURDF("plane.urdf")
 
 # Set environment
-# p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
-p.setPhysicsEngineParameter(enableConeFriction=1)
 p.setGravity(0, 0, -9.81)
 p.changeDynamics(plane, -1, lateralFriction=1.0)
 timeStep = 1.0 / 100.0
@@ -34,6 +32,7 @@ for i in range(1,3):
     p.changeDynamics(robot, i, lateralFriction=1.0, angularDamping = 1.0)
     p.setJointMotorControl2(robot, i, p.VELOCITY_CONTROL, force=0)
     p.resetJointState(robot, i, targetValue=0, targetVelocity=0)
+    p.enableJointForceTorqueSensor(robot, i, 1)
 
 # Control parameters
 left_torque = 0
@@ -45,6 +44,11 @@ previous_wheel_velocities = np.array([[0,0], [0,0], [0,0], [0,0], [0,0], [0,0], 
 previous_base_velocity_robot = np.zeros(10)
 previous_yaw_velocity = np.zeros(10)
 previous_pitch_velocity = np.zeros(10)
+
+#Parameter
+linear_speed_slider = p.addUserDebugParameter("Linear Speed (X)", -1, 1, 0)  # Min, Max, Default
+angular_speed_slider = p.addUserDebugParameter("Angular Speed (Yaw)", -0.5, 0.5, 0)  # Min, Max, Default
+start = p.addUserDebugParameter("Start", 1, 0, 0)
 
 # For compare
 calculate_velo = [[], [], []]
@@ -90,18 +94,19 @@ while True:
         q = joint_state[0]  # Position
         qdot = joint_state[1]  # Velocity
         wheel_feedback.append((q, qdot))
+        print(joint_state[2], left_torque, right_torque)
+        print(joint_state[3])
 
-    # Print feedback
-    # print(f"Left_torque: {left_torque:.4f}, Right_torque: {right_torque:.4f}")
-    # print(f"Forward Velocity: {x_velocity:.4f} m/s")
-    # print(f"Body Tilt: {pitch:.4f}, Body Tilt Velocity: {pitch_velocity:.4f}")
-    # print(f"Robot Angle: {yaw:.4f}, Robot Rotation velocity: {yaw_velocity:.4f}")
-    # print(f"Left Wheel: Position (q): {wheel_feedback[0][0]:.4f}, Velocity (qdot): {wheel_feedback[0][1]:.4f}")
-    # print(f"Right Wheel: Position (q): {wheel_feedback[1][0]:.4f}, Velocity (qdot): {wheel_feedback[1][1]:.4f}")
-    # print("------")
+    linear_speed = p.readUserDebugParameter(linear_speed_slider)
+    angular_speed = p.readUserDebugParameter(angular_speed_slider)
+    is_start = p.readUserDebugParameter(start)
 
-    linear_angle = robot_control.linearVControl(1, wheel_feedback[0][1], wheel_feedback[1][1])
-    turn_torque = robot_control.angularVControl(0.5, wheel_feedback[0][1], wheel_feedback[1][1])
+    if is_start > 0:
+        linear_angle = robot_control.linearVControl(linear_speed, wheel_feedback[0][1], wheel_feedback[1][1])
+        turn_torque = robot_control.angularVControl(angular_speed, wheel_feedback[0][1], wheel_feedback[1][1])
+    else:
+        linear_angle = robot_control.linearVControl(0, wheel_feedback[0][1], wheel_feedback[1][1])
+        turn_torque = robot_control.angularVControl(0, wheel_feedback[0][1], wheel_feedback[1][1])
     ff_torque = robot_control.feedForward(pitch, linear_angle)
     balance_torque = robot_control.balanceControl(pitch, pitch_velocity, linear_angle)
     new_left_torque = ff_torque + balance_torque - turn_torque
@@ -109,96 +114,84 @@ while True:
     left_torque = max(min(left_torque + threshold, new_left_torque), left_torque - threshold)
     right_torque = max(min(right_torque + threshold, new_right_torque), right_torque - threshold)
 
-    print("ff",ff_torque)
-    print("balance", balance_torque)
-    print("linear", linear_angle)
-    print("angular", turn_torque)
+    if is_start > 0:
+        if current_time < 10.0:
+            contact_l = p.getContactPoints(robot, plane, 1, -1)
+            lfx_l = 0
+            lfy_l = 0
+            lfz_l = 0
+            for point in contact_l:
+                lfx_l += point[11][0] * point[10] + point[13][0] * point[12]
+                lfy_l += point[11][1] * point[10] + point[13][1] * point[12]
+                lfz_l += point[11][2] * point[10] + point[13][2] * point[12]
+            f[0].append(lfx_l)
+            f[1].append(lfy_l)
+            f[2].append(lfz_l)
 
-    if current_time < 30.0:
+            contact_r = p.getContactPoints(robot, plane, 2, -1)
+            lfx_r = 0
+            lfy_r = 0
+            lfz_r = 0
+            for point in contact_r:
+                lfx_r += point[11][0] * point[10] + point[13][0] * point[12]
+                lfy_r += point[11][1] * point[10] + point[13][1] * point[12]
+                lfz_r += point[11][2] * point[10] + point[13][2] * point[12]
+            f[3].append(lfx_r)
+            f[4].append(lfy_r)
+            f[5].append(lfz_r)
 
-        contact_l = p.getContactPoints(robot, plane, 1, -1)
-        lfx_l = 0
-        lfy_l = 0
-        lfz_l = 0
-        for point in contact_l:
-            # print(f"N: {point[9]}, lf1: {point[10]}, lf2: {point[12]}")
-            lfx_l += point[11][0] * point[10] + point[13][0] * point[12]
-            lfy_l += point[11][1] * point[10] + point[13][1] * point[12]
-            lfz_l += point[11][2] * point[10] + point[13][2] * point[12]
-        f[0].append(lfx_l)
-        f[1].append(lfy_l)
-        f[2].append(lfz_l)
+            # acceleration = robot_control.compare([pitch, pitch_velocity], left_torque, right_torque, yaw_velocity, x_velocity, (np.cos(yaw)*lfx_l + np.sin(yaw)*lfy_l)*robot_control.r, (np.cos(yaw)*lfx_r + np.sin(yaw)*lfy_r)*robot_control.r)
+            acceleration = robot_control.compare([pitch, pitch_velocity], left_torque, right_torque, [x_velocity, pitch_velocity, yaw_velocity], [wheel_feedback[0][1], wheel_feedback[1][1]])
+            x_accel = acceleration[0][0]
+            pitch_accel = acceleration[1][0]
+            yaw_accel = acceleration[2][0]
 
-        contact_r = p.getContactPoints(robot, plane, 2, -1)
-        lfx_r = 0
-        lfy_r = 0
-        lfz_r = 0
-        for point in contact_r:
-            # print(f"N: {point[9]}, lf1: {point[10]}, lf2: {point[12]}")
-            lfx_r += point[11][0] * point[10] + point[13][0] * point[12]
-            lfy_r += point[11][1] * point[10] + point[13][1] * point[12]
-            lfz_r += point[11][2] * point[10] + point[13][2] * point[12]
-        f[3].append(lfx_r)
-        f[4].append(lfy_r)
-        f[5].append(lfz_r)
+            current_cal_velo[0] = Controller.rk4(current_cal_velo[0], lambda x: acceleration[0][0], timeStep)
+            current_cal_velo[1] = Controller.rk4(current_cal_velo[1], lambda x: acceleration[1][0], timeStep)
+            current_cal_velo[2] = Controller.rk4(current_cal_velo[2], lambda x: acceleration[2][0], timeStep)
 
-        # print((np.sqrt(lfx_l**2+lfy_l**2))*robot_control.r)
-        # print((np.sqrt(lfx_r**2+lfy_r**2))*robot_control.r)
-        acceleration = robot_control.compare([pitch, pitch_velocity], left_torque, right_torque, (np.sqrt(lfx_l**2+lfy_l**2))*robot_control.r, (np.sqrt(lfx_r**2+lfy_r**2))*robot_control.r)
-        x_accel = acceleration[0][0]
-        pitch_accel = acceleration[1][0]
-        yaw_accel = acceleration[2][0]
+            calculate_velo[0].append(current_cal_velo[0])
+            calculate_velo[1].append(current_cal_velo[1])
+            calculate_velo[2].append(current_cal_velo[2])
+            real_velo[0].append(x_velocity)
+            real_velo[1].append(pitch_velocity)
+            real_velo[2].append(yaw_velocity)
+            time_stamp.append(current_time)
 
-        calculate_velo[0].append(current_cal_velo[0])
-        calculate_velo[1].append(current_cal_velo[1])
-        calculate_velo[2].append(current_cal_velo[2])
-        real_velo[0].append(x_velocity)
-        real_velo[1].append(pitch_velocity)
-        real_velo[2].append(yaw_velocity)
-        time_stamp.append(current_time)
+            current_time += timeStep
+        else:
+            p.disconnect()
+            components = ['X Velocity', 'Pitch Velocity', 'Yaw Velocity']
+            fig, axs = plt.subplots(3, 2, figsize=(12, 10))
 
-        # current_cal_velo = [x_velocity, pitch_velocity, yaw_velocity]
-        current_cal_velo[0] += acceleration[0][0] * (timeStep)
-        current_cal_velo[1] += acceleration[1][0] * (timeStep)
-        current_cal_velo[2] += acceleration[2][0] * (timeStep)
-        current_time += timeStep
-    else:
-        p.disconnect()
-        # print(real_velo[0][0], calculate_velo[0][0])
-        components = ['X Velocity', 'Pitch Velocity', 'Yaw Velocity']
-        fig, axs = plt.subplots(3, 2, figsize=(12, 10))  # 3 rows, 2 columns
+            for i in range(3):
+                axs[i, 0].plot(time_stamp, real_velo[i], label=f"Real {components[i]}")
+                axs[i, 0].set_xlabel("Time (s)")
+                axs[i, 0].set_ylabel(f"{components[i]} (m/s or rad/s)")
+                axs[i, 0].set_title(f"Real {components[i]}")
+                axs[i, 0].legend()
+                axs[i, 0].grid()
 
-        for i in range(3):  # Loop through 3 components
-            # Plot real velocity on the left column
-            axs[i, 0].plot(time_stamp, real_velo[i], label=f"Real {components[i]}")
-            axs[i, 0].set_xlabel("Time (s)")
-            axs[i, 0].set_ylabel(f"{components[i]} (m/s or rad/s)")
-            axs[i, 0].set_title(f"Real {components[i]}")
-            axs[i, 0].legend()
-            axs[i, 0].grid()
+                axs[i, 1].plot(time_stamp, calculate_velo[i], label=f"Calculated {components[i]}")
+                axs[i, 1].set_xlabel("Time (s)")
+                axs[i, 1].set_ylabel(f"{components[i]} (m/s or rad/s)")
+                axs[i, 1].set_title(f"Calculated {components[i]}")
+                axs[i, 1].legend()
+                axs[i, 1].grid()
 
-            # Plot calculated velocity on the right column
-            axs[i, 1].plot(time_stamp, calculate_velo[i], label=f"Calculated {components[i]}")
-            axs[i, 1].set_xlabel("Time (s)")
-            axs[i, 1].set_ylabel(f"{components[i]} (m/s or rad/s)")
-            axs[i, 1].set_title(f"Calculated {components[i]}")
-            axs[i, 1].legend()
-            axs[i, 1].grid()
+            plt.tight_layout()
+            plt.show()
 
-        plt.tight_layout()  # Adjust spacing between subplots
-        plt.show()
+            # components = ['fx_l', 'fy_l', 'fz_l', 'fx_r', 'fy_r', 'fz_r']
+            # fig, axs = plt.subplots(3, 2, figsize=(12, 10))
 
-        components = ['fx_l', 'fy_l', 'fz_l', 'fx_r', 'fy_r', 'fz_r']
-        fig, axs = plt.subplots(3, 2, figsize=(12, 10))
+            # for i in range(6):
+            #     axs[i//2, i%2].plot(time_stamp, f[i], label=f"{components[i]}")
+            #     axs[i//2, i%2].set_xlabel("Time (s)")
+            #     axs[i//2, i%2].set_ylabel(f"{components[i]}")
+            #     axs[i//2, i%2].set_title(f"{components[i]}")
+            #     axs[i//2, i%2].legend()
+            #     axs[i//2, i%2].grid()
 
-        for i in range(6):  # Loop through 3 components
-            # Plot real velocity on the left column
-            axs[i//2, i%2].plot(time_stamp, f[i], label=f"{components[i]}")
-            axs[i//2, i%2].set_xlabel("Time (s)")
-            axs[i//2, i%2].set_ylabel(f"{components[i]}")
-            axs[i//2, i%2].set_title(f"{components[i]}")
-            axs[i//2, i%2].legend()
-            axs[i//2, i%2].grid()
-
-        plt.tight_layout()  # Adjust spacing between subplots
-        plt.show()
+            # plt.tight_layout()
+            # plt.show()
