@@ -11,6 +11,8 @@ yaw_velocity_data = []
 simulation_time_data = []
 left_torque_data = []
 right_torque_data = []
+x_position_data = []
+y_position_data = []
 
 # Connect to PyBullet
 p.connect(p.GUI)
@@ -134,11 +136,15 @@ while True:
     pitch_velocity_data.append(pitch_velocity)
     left_torque_data.append(left_torque)
     right_torque_data.append(right_torque)
+    x_position_data.append(x)
+    y_position_data.append(y)
 
-    # Stop simulation after 30 seconds
-    # if current_time >= 50:
-    #     break
+    # Stop simulation after 50 seconds
+    if current_time >= 60:
+        break
+
 p.disconnect()
+
 fig, axs = plt.subplots(5, 1, figsize=(20, 25), constrained_layout=True)
 
 # Plot x_velocity_data
@@ -183,4 +189,23 @@ axs[4].legend()
 axs[4].grid()
 
 # Show the plot
+plt.show()
+
+fig, axs = plt.subplots(2, 1, figsize=(20, 25), constrained_layout=True)
+# Plot x_velocity (desired vs actual)
+axs[0].plot(simulation_time_data, x_position_data, label='x_position', linewidth=2)
+axs[0].set_title('X Position')
+axs[0].set_xlabel('Time (s)')
+axs[0].set_ylabel('distance (m)')
+axs[0].legend()
+axs[0].grid()
+
+# Plot pitch_velocity_data
+axs[1].plot(simulation_time_data, y_position_data, label='y_position', linewidth=2,)
+axs[1].set_title('Y Position')
+axs[1].set_xlabel('Time (s)')
+axs[1].set_ylabel('distance (m)')
+axs[1].legend()
+axs[1].grid()
+
 plt.show()

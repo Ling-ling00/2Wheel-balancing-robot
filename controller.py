@@ -85,10 +85,6 @@ class Controller:
 
         vx = np.clip(vx, -1, 1)
         w = np.clip(w, -0.5, 0.5)
-
-        # if d < math.sqrt((target_X**2)+(target_Y**2))*0.27:
-        #     return 0, 0
-        # else:
         return vx, w
 
     def compare(self, theta, Tl, Tr, velocities, wheel_velocities):

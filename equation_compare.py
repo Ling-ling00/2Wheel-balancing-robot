@@ -94,8 +94,6 @@ while True:
         q = joint_state[0]  # Position
         qdot = joint_state[1]  # Velocity
         wheel_feedback.append((q, qdot))
-        print(joint_state[2], left_torque, right_torque)
-        print(joint_state[3])
 
     linear_speed = p.readUserDebugParameter(linear_speed_slider)
     angular_speed = p.readUserDebugParameter(angular_speed_slider)
