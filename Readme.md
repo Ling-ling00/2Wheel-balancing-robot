@@ -51,8 +51,12 @@ from $L = T-V$
 from $q = [x, {\theta}, {\psi}]$
 and ${\tau} = \frac{d}{dt}(\frac{\partial L}{\partial \dot{q}})-\frac{\partial L}{\partial q}$
 
-- $\begin{bmatrix} M_b+2M_w+\frac{2J}{r^2} & M_blcos{\theta} & 0 \\ M_blcos{\theta} & I_y+M_bl^2 & 0 \\0 & 0 & I_z+\frac{M_wd^2}{2}+\frac{Jd^2}{2r^2}\end{bmatrix} $
-$\begin{bmatrix}
+- $\begin{bmatrix}
+  M_b+2M_w+\frac{2J}{r^2} & M_blcos{\theta} & 0 \\
+  M_blcos{\theta} & I_y+M_bl^2 & 0 \\
+  0 & 0 & I_z+\frac{M_wd^2}{2}+\frac{Jd^2}{2r^2}
+\end{bmatrix}
+\begin{bmatrix}
     \ddot{x} \\
     \ddot{\theta} \\
     \ddot{\psi}
