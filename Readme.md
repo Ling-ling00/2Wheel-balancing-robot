@@ -123,7 +123,9 @@ calculate ${\tau_x}, {\tau_{\theta}}, {\tau_{\psi}}$ in term of ${\tau_l}, {\tau
 1. Open File Simulation
 2. Run the file
 - You will see interface like this
-![interface](img\interface.png)
+
+![interface](img/interface.png)
+
 **1. Input Zone:** Adjust Target of Position and Velocity.
 **2. Switch Button:** Use to Switch Between Control Position target or Velocity Target.
     >**This 2 mode is seperatly out.**
