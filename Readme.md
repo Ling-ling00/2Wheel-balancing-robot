@@ -128,9 +128,9 @@ calculate ${\tau_x}, {\tau_{\theta}}, {\tau_{\psi}}$ in term of ${\tau_l}, {\tau
 
 **1. Input Zone:** Adjust Target of Position and Velocity.
 **2. Switch Button:** Use to Switch Between Control Position target or Velocity Target.
-    >**This 2 mode is seperatly out.**
+>**This 2 mode is seperatly out.**
 
-    **3. Simulation Zone:** Show the simulation.
+**3. Simulation Zone:** Show the simulation.
 
 After Simulation Finish You will see Graph
 ![speed graph](img/balance_graph.png)
