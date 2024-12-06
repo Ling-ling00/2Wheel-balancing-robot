@@ -53,8 +53,8 @@ $$L = \frac{1}{2}(M_b+2M_w+\frac{2J}{r^2})\dot{x}^2+\frac{1}{2}(I_z+\frac{M_wd^2
 #### Dynamics of TWIP
 from $q = [x, {\theta}, {\psi}]$
 and ${\tau} = \frac{d}{dt}(\frac{\partial L}{\partial \dot{q}})-\frac{\partial L}{\partial q}$
-
-- $\begin{bmatrix}
+```math
+\begin{bmatrix}
    M_b+2M_w+\frac{2J}{r^2} & M_blcos{\theta} & 0 \\
    M_blcos{\theta} & I_y+M_bl^2 & 0 \\
    0 & 0 & I_z+\frac{M_wd^2}{2}+\frac{Jd^2}{2r^2}
@@ -82,7 +82,8 @@ and ${\tau} = \frac{d}{dt}(\frac{\partial L}{\partial \dot{q}})-\frac{\partial L
 ```
 
 calculate ${\tau_x}, {\tau_{\theta}}, {\tau_{\psi}}$ in term of ${\tau_l}, {\tau_r}$
-- $\begin{bmatrix}
+```math
+\begin{bmatrix}
    M_b+2M_w+\frac{2J}{r^2} & M_blcos{\theta} & 0 \\
    M_blcos{\theta} & I_y+M_bl^2 & 0 \\
    0 & 0 & I_z+\frac{M_wd^2}{2}+\frac{Jd^2}{2r^2}
