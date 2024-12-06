@@ -37,15 +37,18 @@ The simulation involves modeling the dynamics of a Two-Wheeled Inverted Pendulum
 
 #### Kinetic energy
 Body kinetic energy
+
 $$T = \frac{1}{2}M_b(\dot{x}^{2} + 2lcos{\theta}\dot{\theta}\dot{x} + (l\dot{\theta})^2) + \frac{1}{2}(I_y\dot{\theta}^{2} + I_z\dot{\psi}^{2} + \frac{1}{2}M_wd^{2}{\psi}^{2})$$
 
 Wheel kinetic energy
+
 $$T =M_w\dot{x}^2 + J(\frac{\dot{x}\pm\frac{d}{2}\dot{\psi}}{r})^2$$
 
 #### Potential energy
 $$V = mglcos{\theta}$$
 #### Lagrange Method
 from $L = T-V$
+
 $$L = \frac{1}{2}(M_b+2M_w+\frac{2J}{r^2})\dot{x}^2+\frac{1}{2}(I_z+\frac{M_wd^2}{2}+\frac{Jd^2}{2r^2})\dot{\psi}^2+\frac{1}{2}(I_y+M_bl^2)\dot{\theta}^2+M_b\dot{x}\dot{\theta}lcos{\theta}-M_bglcos{\theta}$$
 #### Dynamics of TWIP
 from $q = [x, {\theta}, {\psi}]$
