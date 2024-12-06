@@ -136,12 +136,19 @@ After Simulation Finish You will see Graph
 ![speed graph](img/balance_graph.png)
 ![position graph](img/pos_graph.png)
 **1. Forward Velocity:** Plotting linear velocity over time.
+
 **2. Pitch Velocity:** Plotting pitch velocity over time.
+
 **3. Yaw Velocity:** Plotting Yaw velocity around z-axis over time.
+
 **4. Left Torque:** Plotting torque left wheel over time.
+
 **5. Right Torque:** Plotting torque Right wheel over time.
+
 **6. X-Position:** Plotting Position robot move in X-axis over time.
+
 **7. Y-Position:** Plotting Position robot move in Y-axis over time.
+
 # Demos & Result <a name = "demosnresult"> </a>
 ## 1. Self-Balancing
 This Demo will show our robot can self-balance itself.
