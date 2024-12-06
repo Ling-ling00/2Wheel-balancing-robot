@@ -140,7 +140,7 @@ while True:
     y_position_data.append(y)
 
     # Stop simulation after 50 seconds
-    if current_time >= 60:
+    if current_time >= 100:
         break
 
 p.disconnect()
