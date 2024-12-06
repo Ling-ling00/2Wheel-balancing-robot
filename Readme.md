@@ -51,31 +51,37 @@ from $L = T-V$
 from $q = [x, {\theta}, {\psi}]$
 and ${\tau} = \frac{d}{dt}(\frac{\partial L}{\partial \dot{q}})-\frac{\partial L}{\partial q}$
 
-- $$\begin{bmatrix}
-  M_b+2M_w+\frac{2J}{r^2} & M_blcos{\theta} & 0 \\\
-  M_blcos{\theta} & I_y+M_bl^2 & 0 \\\
-  0 & 0 & I_z+\frac{M_wd^2}{2}+\frac{Jd^2}{2r^2}
+- $$
+\begin{bmatrix}
+  M_b+2M_w+\frac{2J}{r^2} & M_b l \cos{\theta} & 0 \\
+  M_b l \cos{\theta} & I_y+M_b l^2 & 0 \\
+  0 & 0 & I_z+\frac{M_w d^2}{2}+\frac{J d^2}{2 r^2}
 \end{bmatrix}
 \begin{bmatrix}
-    \ddot{x} \\\
-    \ddot{\theta} \\\
+    \ddot{x} \\
+    \ddot{\theta} \\
     \ddot{\psi}
-\end{bmatrix}+
+\end{bmatrix}
++
 \begin{bmatrix}
-    -M_bl\dot{\theta}^2sin{\theta} \\\
-    0 \\\
+    -M_b l \dot{\theta}^2 \sin{\theta} \\
+    0 \\
     0
-\end{bmatrix} +
+\end{bmatrix}
++
 \begin{bmatrix}
-    0 \\\
-    -M_bglsin{\theta}  \\\
+    0 \\
+    -M_b g l \sin{\theta} \\
     0
-\end{bmatrix} = 
+\end{bmatrix}
+=
 \begin{bmatrix}
-    {\tau_x} \\\
-    {\tau_{\theta}}  \\\
-    {\tau_{\psi}}
-\end{bmatrix}$$
+    \tau_x \\
+    \tau_{\theta} \\
+    \tau_{\psi}
+\end{bmatrix}
+$$
+
 
 calculate ${\tau_x}, {\tau_{\theta}}, {\tau_{\psi}}$ in term of ${\tau_l}, {\tau_r}$
 - $\begin{bmatrix}
