@@ -153,7 +153,7 @@ After Simulation Finish You will see Graph
 ## 1. Self-Balancing
 This Demo will show our robot can self-balance itself.
 
-<!-- <video controls src="img/balance.mp4" title="Title"></video> -->
+https://github.com/user-attachments/assets/5121acdb-f3fc-406e-a9b1-435820a80894
 
 plotting graph to visualize.
 
@@ -164,7 +164,7 @@ Frist we add external force to robot from the video will see it can balance itse
 ## 2. Linear Velocity Control
 This Demo will show our robot acheive linear velocity target from input.
 
-<!-- <video controls src="img/linear.mp4" title="Title"></video> -->
+https://github.com/user-attachments/assets/8ae4eff4-0120-4ed7-bb46-2bfe011fda2f
 
 plotting graph to visualize.
 
@@ -175,7 +175,7 @@ after input target to **1 m/s** this robot use 20 second to acheive target and a
 ## 3. Angular Velocity Control
 This Demo will show our robot acheive yaw velocity target from input.
 
-<!-- <video controls src="img/angular.mp4" title="Title"></video> -->
+https://github.com/user-attachments/assets/988f17a6-996c-4843-91b9-7d9c07aa536c
 
 plotting graph to visualize.
 
@@ -185,8 +185,7 @@ Input Angular Velocity to **0.5 rad/s** after robot acheive target input new tar
 ## 4. Linear and Angular Velocity Control
 This Demo will show our robot acheive linear and angular velocity target from input.
 
-<!-- <video controls src="img/linear and angular.mp4" title="
-"></video> -->
+https://github.com/user-attachments/assets/d02d0f99-42c9-48c8-af1c-3f6831599d21
 
 plotting graph to visualize.
 ![alt text](img/lin_yaw_graph.png)
@@ -196,8 +195,7 @@ when input linear velocity to **1 m/s** and input Angular velocity to **0.5 rad/
 ## 5. Position Control
 This demo show robot can acheive position target in X and Y axis
 
-<!-- <video controls src="img/position.mp4" title="
-"></video> -->
+https://github.com/user-attachments/assets/16d5feb2-e80b-411a-b317-b721595c6b67
 
 plotting graph to visualize.
 ![alt text](img/pos_graph.png)
@@ -241,7 +239,7 @@ To ensure the simulation is equal the equation we use this dynamics equation
 
 demo simulation
 
-<video src="img/compare.mp4"></video>
+https://github.com/user-attachments/assets/5402b1d8-da1a-4db4-8e29-a80277e5b849
 
 plotting graph to visualize.
 ![alt text](img/compare_no_fric.png)
