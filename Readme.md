@@ -379,6 +379,8 @@ from this graph will see it have more likely simulation but not all. That make u
 ```
 
 # Conclusion <a name = "conclusion"> </a>
+Simulation of 2-Wheel self-balancing Robot can be done in Python Usind existing libary Pybullet. From the result robot can 1. self-balancing 2. Positon control 3. Velocities Control and Comparing to the Equation but after comparing will see different of Simulation and Equation is Disturbance term.
+
 
 # Future plan <a name = "futureplans"> </a>
 - Fine tuning PID for more precision control.
