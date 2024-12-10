@@ -158,6 +158,7 @@ In this simulation control a Two-Wheeled Inverted Pendulum Robot (TWIP) with PID
 ![interface](img/interface.png)
 
 **1. Input Zone:** Adjust Target of Position and Velocity.
+
 **2. Switch Button:** Use to Switch Between Control Position target or Velocity Target.
 >**This 2 mode is seperatly out.**
 
@@ -167,11 +168,17 @@ After Simulation Finish You will see Graph
 ![speed graph](img/balance_graph.png)
 ![position graph](img/pos_graph.png)
 **1. Forward Velocity:** Plotting linear velocity over time.
+
 **2. Pitch Velocity:** Plotting pitch velocity over time.
+
 **3. Yaw Velocity:** Plotting Yaw velocity around z-axis over time.
+
 **4. Left Torque:** Plotting torque left wheel over time.
+
 **5. Right Torque:** Plotting torque Right wheel over time.
+
 **6. X-Position:** Plotting Position robot move in X-axis over time.
+
 **7. Y-Position:** Plotting Position robot move in Y-axis over time.
 
 ### Equation compare Simulation
@@ -181,17 +188,24 @@ After Simulation Finish You will see Graph
 ![alt text](img/eq_com_interface.png)
 
 **1. Linear Speed:** Adjust Target linear velocity.
+
 **2. Angular Speed:** Adjust Target angular velocity.
+
 **3. Start Button:** Start equation compare simulation and simulation will run 10 second and show the graph.
 
 After Simulation Finish You will see Graph
 ![alt text](img/compare_no_fric.png)
 
 **1. Real X Velocity:** Plotting linear velocity from simulation over time.
+
 **2. Real Pitch Velocity:** Plotting pitch velocity from simulation over time.
+
 **3. Real Yaw Velocity:** Plotting Yaw velocity around z-axis from simulation over time.
+
 **4. Calculated X Velocity:** Plotting linear velocity from equation over time.
+
 **5. Calculated Pitch Velocity:** Plotting pitch velocity from equation over time.
+
 **6. Calculated Yaw Velocity:** Plotting Yaw velocity around z-axis from equation over time.
 
 # Demos & Result <a name = "demosnresult"> </a>
