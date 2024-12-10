@@ -11,18 +11,25 @@
 - [**References**](#references)
 
 # Installation <a name = "installation"> </a>
-1. Open Terminal
-2. Copy and paste this following command
+Please Check you have all this required:
+1. pybullet
+2. numpy - version 1.24.4
+3. time
+4. matplotlib
+
+if you dont have you can install below code
 ```
 pip install pybullet
 pip install matplotlib
+pip install time
+pip install numpy==1.24.4
 ```
 
 # Methodology <a name = "methodology"> </a>
 ## System Modeling
 The simulation involves modeling the dynamics of a Two-Wheeled Inverted Pendulum Robot (TWIP) system. The key components include:
 <br>Two-Wheeled Inverted Pendulum Robot dynamics
-
+![alt text](img/Coordinate.jpg)
 #### Parameters
 - $x$ &ensp;&emsp;: Position of robot in robot x-axis
 - ${\psi}$ &emsp; : Angle of robot around z-axis
@@ -322,5 +329,13 @@ from this graph will see it have more likely simulation but not all. That make u
 # Conclusion <a name = "conclusion"> </a>
 
 # Future plan <a name = "futureplans"> </a>
+- Fine tuning PID for more precision control.
+- Finding disturbance term in equation.
 
 # References <a name = "references"> </a>
+- [1] Kathryn Remell. “Mathematical Modeling of a Two Wheeled Robotic Base” Uark ScholarWorks, 2021
+
+- [2] Nguyen Cao Cuong., Hoang Dinh Co. “Balancing and Trajectory Tracking Control for Two Wheeled Self-Balancing Robot”, 2024
+
+- [3] Sangtae Kim., SangJoo Kwon. “On the Dynamic Model of a Two-Wheeled Inverted Pendulum Robot”, 2014
+
