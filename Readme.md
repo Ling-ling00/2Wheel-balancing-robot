@@ -13,7 +13,7 @@
 # Installation <a name = "installation"> </a>
 Please Check you have all this required:
 1. pybullet
-2. numpy - version 1.24.4
+2. numpy
 3. time
 4. matplotlib
 
@@ -22,14 +22,21 @@ if you dont have you can install below code
 pip install pybullet
 pip install matplotlib
 pip install time
-pip install numpy==1.24.4
+pip install numpy
+```
+
+Clone this Repositories
+```
+git clone https://github.com/Ling-ling00/2Wheel-balancing-robot.git
 ```
 
 # Methodology <a name = "methodology"> </a>
 ## System Modeling
 The simulation involves modeling the dynamics of a Two-Wheeled Inverted Pendulum Robot (TWIP) system. The key components include:
 <br>Two-Wheeled Inverted Pendulum Robot dynamics
-![alt text](img/Coordinate.jpg)
+
+#### Robot dimensions
+![alt text](img/dimension.png)
 #### Parameters
 - $x$ &ensp;&emsp;: Position of robot in robot x-axis
 - ${\psi}$ &emsp; : Angle of robot around z-axis
@@ -45,6 +52,8 @@ The simulation involves modeling the dynamics of a Two-Wheeled Inverted Pendulum
 - ${\tau_l}$ &emsp; : Torque apply to left wheel
 - ${\tau_r}$ &emsp;: Torque apply to right wheel
 
+
+![alt text](img/Coordinate.jpg)
 #### Kinetic energy
 Body kinetic energy
 
@@ -124,10 +133,25 @@ calculate ${\tau_x}, {\tau_{\theta}}, {\tau_{\psi}}$ in term of ${\tau_l}, {\tau
 \end{bmatrix}
 ```
 
+## System Architecture
+In this simulation control a Two-Wheeled Inverted Pendulum Robot (TWIP) with PID control and feed forward.
 
+![alt text](img/system_architecture.png)
+
+- **Target position:** provides the target position in X-Y axis for the robot. 
+- **Target linear velocity:** provides the target linear velocity for the robot. 
+- **Target angular velocity:** provides the target angular velocity for the robot. 
+- **Cartesian to polar coordinates:** Calculate polar coordinates between robot and target from cartesian coordinates. 
+- **Position PID control:** Using PID control to generates angular velocity and linear velocity based on distance between robot and target. 
+- **Inverted pendulum Feed Forward:** get input that is current body rotation around y-axis and calculate torque to counter gravitational terms. 
+- **Inverted pendulum PD control:** Using PD control to generates torque for each wheel based on body rotation around y-axis.
+- **Robot rotation PID control:** using diff-drive kinematics to calculate current angular velocity of robot, compare to target velocity and using PID control to generate wheel torque for the left and right wheels. 
+- **Robot translation PID control:** using diff-drive kinematics to calculate current linear velocity of robot, compare to target velocity and using PID control to generate robot pitch angle (cascade control). 
+- **Plant:** Receive a torque, which is a combine torques from the Inverted pendulum Feed Forward, Inverted pendulum PD control and Robot rotation PID control, of each wheel and return output as rotation of each wheel, tilt angle and position of robot in X-Y plane. 
 
 # User Guide <a name = "userguide"> </a>
-1. Open File Simulation
+### Velocity and Position control Simulation
+1. Open File simulation.py
 2. Run the file
 - You will see interface like this
 
@@ -143,18 +167,32 @@ After Simulation Finish You will see Graph
 ![speed graph](img/balance_graph.png)
 ![position graph](img/pos_graph.png)
 **1. Forward Velocity:** Plotting linear velocity over time.
-
 **2. Pitch Velocity:** Plotting pitch velocity over time.
-
 **3. Yaw Velocity:** Plotting Yaw velocity around z-axis over time.
-
 **4. Left Torque:** Plotting torque left wheel over time.
-
 **5. Right Torque:** Plotting torque Right wheel over time.
-
 **6. X-Position:** Plotting Position robot move in X-axis over time.
-
 **7. Y-Position:** Plotting Position robot move in Y-axis over time.
+
+### Equation compare Simulation
+1. Open File equation_compare.py
+2. Run the file
+- You will see interface like this
+![alt text](img/eq_com_interface.png)
+
+**1. Linear Speed:** Adjust Target linear velocity.
+**2. Angular Speed:** Adjust Target angular velocity.
+**3. Start Button:** Start equation compare simulation and simulation will run 10 second and show the graph.
+
+After Simulation Finish You will see Graph
+![alt text](img/compare_no_fric.png)
+
+**1. Real X Velocity:** Plotting linear velocity from simulation over time.
+**2. Real Pitch Velocity:** Plotting pitch velocity from simulation over time.
+**3. Real Yaw Velocity:** Plotting Yaw velocity around z-axis from simulation over time.
+**4. Calculated X Velocity:** Plotting linear velocity from equation over time.
+**5. Calculated Pitch Velocity:** Plotting pitch velocity from equation over time.
+**6. Calculated Yaw Velocity:** Plotting Yaw velocity around z-axis from equation over time.
 
 # Demos & Result <a name = "demosnresult"> </a>
 ## 1. Self-Balancing
