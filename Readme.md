@@ -372,7 +372,14 @@ from this graph will see it have more likely simulation but not all. That make u
 ```
 
 # Conclusion <a name = "conclusion"> </a>
-Simulation of 2-Wheel self-balancing Robot can be done in Python using existing libary Pybullet. From the result robot can 1. self-balancing 2. Positon control 3. Velocities Control and Comparing to the Equation but after comparing will see different of Simulation and Equation is Disturbance term.
+The simulation of a two-wheel self-balancing robot can be performed in Python using the PyBullet physics engine. The results demonstrate that the robot can:
+- Self-balance
+- Position control
+- Velocity control
+
+These are achieved using a PID controller and feedforward control.
+
+By comparing the equations studied with the simulation results, we observe differences that can be hypothesized to arise from disturbance or force terms introduced in the physics engine. As part of our future plans, we aim to study the sources of these forces in more detail.
 
 
 # Future plan <a name = "futureplans"> </a>
