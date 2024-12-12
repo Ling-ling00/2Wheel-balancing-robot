@@ -1,6 +1,13 @@
 # Two-wheels self-balancing robot
 - This project simulates dynamics of a two-wheels self-balancing robot, and including PID controller to maintain balance and reach the target velocity. 
 
+#### Objective
+1. To simulate 2-wheels robot self-balancing. 
+2. To control a 2-wheels self-balancing robot to target position in x-y plane. 
+3. To control a linear velocity of 2-wheel self-balancing robot. 
+4. To control a rotation velocity around z-axis of 2-wheel self-balancing robot. 
+5. To learn dynamic of 2-wheels self-balancing robot. 
+
 # Table of content
 - [**Installation**](#installation)
 - [**Methodology**](#methodology)
@@ -33,6 +40,7 @@ git clone https://github.com/Ling-ling00/2Wheel-balancing-robot.git
 # Methodology <a name = "methodology"> </a>
 ## System Modeling
 The simulation involves modeling the dynamics of a Two-Wheeled Inverted Pendulum Robot (TWIP) system. The key components include:
+
 <br>Two-Wheeled Inverted Pendulum Robot dynamics
 
 #### Robot dimensions
@@ -157,29 +165,21 @@ In this simulation control a Two-Wheeled Inverted Pendulum Robot (TWIP) with PID
 
 ![interface](img/interface.png)
 
-**1. Input Zone:** Adjust Target of Position and Velocity.
-
-**2. Switch Button:** Use to Switch Between Control Position target or Velocity Target.
+1. **Input Zone:** Adjust Target of Position and Velocity.
+2. **Switch Button:** Use to Switch Between Control Position target or Velocity Target.
 >**This 2 mode is seperatly out.**
-
-**3. Simulation Zone:** Show the simulation.
+3. **Simulation Zone:** Show the simulation.
 
 After Simulation Finish You will see Graph
 ![speed graph](img/balance_graph.png)
 ![position graph](img/pos_graph.png)
-**1. Forward Velocity:** Plotting linear velocity over time.
-
-**2. Pitch Velocity:** Plotting pitch velocity over time.
-
-**3. Yaw Velocity:** Plotting Yaw velocity around z-axis over time.
-
-**4. Left Torque:** Plotting torque left wheel over time.
-
-**5. Right Torque:** Plotting torque Right wheel over time.
-
-**6. X-Position:** Plotting Position robot move in X-axis over time.
-
-**7. Y-Position:** Plotting Position robot move in Y-axis over time.
+1. **Forward Velocity:** Plotting linear velocity over time.
+2. **Pitch Velocity:** Plotting pitch velocity over time.
+3. **Yaw Velocity:** Plotting Yaw velocity around z-axis over time.
+4. **Left Torque:** Plotting torque left wheel over time.
+5. **Right Torque:** Plotting torque Right wheel over time.
+6. **X-Position:** Plotting Position robot move in X-axis over time.
+7. **Y-Position:** Plotting Position robot move in Y-axis over time.
 
 ### Equation compare Simulation
 1. Open File equation_compare.py
@@ -187,30 +187,23 @@ After Simulation Finish You will see Graph
 - You will see interface like this
 ![alt text](img/eq_com_interface.png)
 
-**1. Linear Speed:** Adjust Target linear velocity.
-
-**2. Angular Speed:** Adjust Target angular velocity.
-
-**3. Start Button:** Start equation compare simulation and simulation will run 10 second and show the graph.
+1. **Linear Speed:** Adjust Target linear velocity.
+2. **Angular Speed:** Adjust Target angular velocity.
+3. **Start Button:** Start equation compare simulation and simulation will run 10 second and show the graph.
 
 After Simulation Finish You will see Graph
 ![alt text](img/compare_no_fric.png)
 
-**1. Real X Velocity:** Plotting linear velocity from simulation over time.
-
-**2. Real Pitch Velocity:** Plotting pitch velocity from simulation over time.
-
-**3. Real Yaw Velocity:** Plotting Yaw velocity around z-axis from simulation over time.
-
-**4. Calculated X Velocity:** Plotting linear velocity from equation over time.
-
-**5. Calculated Pitch Velocity:** Plotting pitch velocity from equation over time.
-
-**6. Calculated Yaw Velocity:** Plotting Yaw velocity around z-axis from equation over time.
+1. **Real X Velocity:** Plotting linear velocity from simulation over time.
+2. **Real Pitch Velocity:** Plotting pitch velocity from simulation over time.
+3. **Real Yaw Velocity:** Plotting Yaw velocity around z-axis from simulation over time.
+4. **Calculated X Velocity:** Plotting linear velocity from equation over time.
+5. **Calculated Pitch Velocity:** Plotting pitch velocity from equation over time.
+6. **Calculated Yaw Velocity:** Plotting Yaw velocity around z-axis from equation over time.
 
 # Demos & Result <a name = "demosnresult"> </a>
 ## 1. Self-Balancing
-This Demo will show our robot can self-balance itself.
+This Demo will show our robot can self-balance itself when have small disturbance.
 
 https://github.com/user-attachments/assets/5121acdb-f3fc-406e-a9b1-435820a80894
 
@@ -379,7 +372,7 @@ from this graph will see it have more likely simulation but not all. That make u
 ```
 
 # Conclusion <a name = "conclusion"> </a>
-Simulation of 2-Wheel self-balancing Robot can be done in Python Usind existing libary Pybullet. From the result robot can 1. self-balancing 2. Positon control 3. Velocities Control and Comparing to the Equation but after comparing will see different of Simulation and Equation is Disturbance term.
+Simulation of 2-Wheel self-balancing Robot can be done in Python using existing libary Pybullet. From the result robot can 1. self-balancing 2. Positon control 3. Velocities Control and Comparing to the Equation but after comparing will see different of Simulation and Equation is Disturbance term.
 
 
 # Future plan <a name = "futureplans"> </a>
